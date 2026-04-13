@@ -53,6 +53,47 @@ Do NOT use for EVM swaps -- use dex_get_swap_quote. Do NOT use for Solana fees o
         },
         required: ["inputMint", "outputMint", "amount"],
       },
+      outputSchema: {
+          "type": "object",
+          "properties": {
+            "inputMint": {
+              "type": "string",
+              "description": "Input token mint address"
+            },
+            "outputMint": {
+              "type": "string",
+              "description": "Output token mint address"
+            },
+            "inAmount": {
+              "type": "string",
+              "description": "Input amount"
+            },
+            "outAmount": {
+              "type": "string",
+              "description": "Output amount"
+            },
+            "priceImpactPct": {
+              "type": "string",
+              "description": "Price impact percentage"
+            },
+            "routePlan": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Route details"
+            },
+            "slippageBps": {
+              "type": "number",
+              "description": "Slippage in basis points"
+            }
+          },
+          "required": [
+            "inputMint",
+            "outputMint",
+            "outAmount"
+          ]
+        },
     },
   ],
 };
