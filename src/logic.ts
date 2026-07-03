@@ -67,7 +67,9 @@ function tokenSymbol(mint: string): string {
 }
 
 // ── External APIs ──────────────────────────────────────────────────────
-const JUPITER_API = "https://quote-api.jup.ag/v6/quote";
+// quote-api.jup.ag/v6 was fully decommissioned (DNS no longer resolves) --
+// migrated to the free lite-api.jup.ag tier, same response shape.
+const JUPITER_API = "https://lite-api.jup.ag/swap/v1/quote";
 const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
 
 async function fetchJupiterQuote(
