@@ -152,12 +152,15 @@ async function fetchTokenPriceUsd(mint: string): Promise<number | null> {
 
 // ── Route registration ─────────────────────────────────────────────────
 export function registerRoutes(app: Hono) {
-  app.get("/api/quote", async (c) => {
+  async function handleQuote(
+    c: any,
+    params: { inputMint?: string; outputMint?: string; amount?: string; slippage?: string | number }
+  ) {
     await tryRequirePayment(0.002);
-    const rawInput = c.req.query("inputMint");
-    const rawOutput = c.req.query("outputMint");
-    const amount = c.req.query("amount");
-    const slippage = parseInt(c.req.query("slippage") || "50", 10);
+    const rawInput = params.inputMint;
+    const rawOutput = params.outputMint;
+    const amount = params.amount;
+    const slippage = parseInt(String(params.slippage ?? "50"), 10);
 
     if (!rawInput || !rawOutput || !amount) {
       return c.json(
@@ -257,5 +260,28 @@ export function registerRoutes(app: Hono) {
         502
       );
     }
+  }
+
+  app.get("/api/quote", async (c) => {
+    return handleQuote(c, {
+      inputMint: c.req.query("inputMint"),
+      outputMint: c.req.query("outputMint"),
+      amount: c.req.query("amount"),
+      slippage: c.req.query("slippage"),
+    });
+  });
+
+  // POST mirror of the GET route above -- Bazaar (CDP) only reliably indexes
+  // POST payments with valid payloads (~82% conversion vs ~14% for GET-only
+  // resources, confirmed empirically). Same params, same logic, just body
+  // instead of query string.
+  app.post("/api/quote", async (c) => {
+    const body = await c.req.json().catch(() => ({}) as any);
+    return handleQuote(c, {
+      inputMint: body.inputMint,
+      outputMint: body.outputMint,
+      amount: body.amount,
+      slippage: body.slippage,
+    });
   });
 }
