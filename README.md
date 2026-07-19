@@ -35,7 +35,8 @@ Any x402-aware client ([`@x402/fetch`](https://www.npmjs.com/package/@x402/fetch
 
 | Tool | Method | Path | Price | Description |
 |---|---|---|---|---|
-| `jupiter_get_swap_quote` | GET | `/api/quote` | $0.002 | Get best swap quote on Solana via Jupiter aggregator |
+| `jupiter_get_swap_quote` | GET | `/api/quote` | $0.005 | Get best swap quote on Solana via Jupiter aggregator |
+| `jupiter_get_swap_quote` | POST | `/api/quote` | $0.005 | Get best swap quote on Solana via Jupiter aggregator (POST variant) |
 
 ### `jupiter_get_swap_quote`
 
@@ -69,8 +70,41 @@ Example response:
 
 **When to use**: executing any Solana token swap. Essential for getting the best price, understanding slippage, and choosing the optimal route.
 
+### `jupiter_get_swap_quote`
+
+Use this when you need a swap quote on Solana. Returns the best route via Jupiter aggregator across all Solana DEXes with price impact and fee analysis. POST variant of jupiter_get_swap_quote -- same params passed as JSON body instead of query string.
+
+**Parameters**
+
+| Name | Type | Required | Description |
+|---|---|---|---|
+| `inputMint` | string | yes | Input token mint address or symbol (SOL, USDC, USDT). e.g. So11111111111111111111111111111111111111112 or SOL |
+| `outputMint` | string | yes | Output token mint address or symbol (SOL, USDC, USDT). e.g. EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v or USDC |
+| `amount` | string | yes | Amount in raw lamports/smallest unit. e.g. 1000000000 = 1 SOL, 1000000 = 1 USDC |
+| `slippage` | number | no | Slippage tolerance in basis points. Default 50 (0.5%). e.g. 100 = 1% |
+
+**Returns**
+
+- `inputToken` -- input token symbol and mint address
+- `outputToken` -- output token symbol and mint address
+- `inAmount` -- input amount in raw units
+- `outAmount` -- expected output amount in raw units
+- `priceImpact` -- price impact percentage (e.g. 0.12 = 0.12%)
+- `minimumReceived` -- minimum output after slippage tolerance
+- `route` -- array of DEX hops used (e.g. Raydium -> Orca)
+- `priorityFee` -- recommended priority fee in lamports
+
+Example response:
+
+```json
+{"inputToken":{"symbol":"SOL","mint":"So111..."},"outputToken":{"symbol":"USDC","mint":"EPjF..."},"inAmount":"1000000000","outAmount":"67450000","priceImpact":0.05,"minimumReceived":"67112750","route":["Raydium V4"],"priorityFee":5000}
+```
+
+**When to use**: executing any Solana token swap. Essential for getting the best price, understanding slippage, and choosing the optimal route.
+
 ## Example agent prompts
 
+- "A swap quote on Solana"
 - "A swap quote on Solana"
 
 ## Payment
