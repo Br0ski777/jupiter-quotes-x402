@@ -9,7 +9,7 @@ export const API_CONFIG: ApiConfig = {
     {
       method: "GET",
       path: "/api/quote",
-      price: "$0.002",
+      price: "$0.005",
       description: "Get best swap quote on Solana via Jupiter aggregator",
       toolName: "jupiter_get_swap_quote",
       toolDescription: `Use this when you need a swap quote on Solana. Returns the best route via Jupiter aggregator across all Solana DEXes with price impact and fee analysis.
@@ -98,7 +98,7 @@ Do NOT use for EVM swaps -- use dex_get_swap_quote. Do NOT use for Solana fees o
     {
       method: "POST",
       path: "/api/quote",
-      price: "$0.002",
+      price: "$0.005",
       description: "Get best swap quote on Solana via Jupiter aggregator (POST variant)",
       toolName: "jupiter_get_swap_quote",
       toolDescription: `Use this when you need a swap quote on Solana. Returns the best route via Jupiter aggregator across all Solana DEXes with price impact and fee analysis. POST variant of jupiter_get_swap_quote -- same params passed as JSON body instead of query string.
